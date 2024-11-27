@@ -1,0 +1,38 @@
+<html lang="en">
+  <head>
+    <title>Tasks</title>
+<link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <h1>Task Details</h1>
+<main>
+        <table class="task-detail-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="task">
+              <td><%= task.id %></td>
+              <td><%= task.description %></td>
+              <td><%= task.status_complete ? 'Complete' : 'Incomplete' %></td>
+              <td>
+                <!-- Go back to the tasks list page -->
+                <a href="/tasks" class="back-btn">Go back to tasks</a>
+                
+                <!-- Edit button (can redirect to an edit page or show a form inline) -->
+                <button href="/tasks/<%= task.id %>/edit" class="edit-btn">Edit</button>
+
+                <!-- Delete button that triggers the deleteTask function -->
+                <button class="delete-btn" onclick="deleteTask('<%= task.id %>')">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+    </main>
+  </body>
+</html>

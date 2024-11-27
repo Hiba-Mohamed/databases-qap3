@@ -20,6 +20,41 @@ h1 {
   text-align: center;
 }
 
+.task-detail-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling the task detail table */
+.task-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.task-detail-table th, .task-detail-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.task-detail-table th {
+  background-color: #71428c;
+  color: white;
+}
+
+.task-detail-table td {
+  background-color: #f9f9f9;
+}
+
+.task-detail-table tr:hover {
+  background-color: #f1f1f1;
+}
+
 main {
   width: 100%;
   padding: 20px;
@@ -130,6 +165,27 @@ button:active {
   background-color: #577e60;
 }
 
+.back-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  background-color: #383dc3;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background-color: #522f9c;
+}
+
+.back-btn:active {
+  background-color: #58577e;
+}
+
+
 .delete-btn {
   background-color: #b9434f;
 }
@@ -142,3 +198,22 @@ button:active {
   background-color: #813f46;
 }
 
+.explore-btn {
+    display: inline-block;
+    background-color: #c07bb8; /* Green background */
+    color: white; /* White text */
+    padding: 10px 20px; /* Padding around the text */
+    text-align: center; /* Center text inside the link */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Adjust text size */
+    transition: background-color 0.3s ease; /* Smooth background transition */
+}
+
+.explore-btn:hover {
+    background-color: #bf4db1; /* Darker green on hover */
+}
+
+.explore-btn:active {
+    background-color: #c07bb8; /* Even darker green when clicked */
+}

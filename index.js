@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const app = express();
 const PORT = 3000;
 const { Pool } = require("pg");
@@ -24,7 +24,6 @@ app.use(express.static("public"));
 //     { id: 2, description: 'Read a book', status: 'complete' },
 // ];
 
-
 async function createTable() {
   try {
     await pool.query(`
@@ -35,15 +34,9 @@ async function createTable() {
       );
     `);
 
-    console.log(
-      "-------------------------------------------"
-    );
-    console.log(
-      "| OK    Tasks table created successfully! |"
-    );
-    console.log(
-      "-------------------------------------------"
-    );
+    console.log("-------------------------------------------");
+    console.log("| OK    Tasks table created successfully! |");
+    console.log("-------------------------------------------");
   } catch (error) {
     console.log(
       "---------------------------------------------------------------------"
@@ -58,31 +51,31 @@ async function createTable() {
   }
 }
 
-(async function populateDatabase(){
-await createTable();
-await insertSampleData()
-})()
+(async function populateDatabase() {
+  await createTable();
+  await insertSampleData();
+})();
 
 async function insertSampleData() {
-async function insertTask(description, status_complete) {
-  const query =
-    "INSERT INTO tasks (description, status_complete) VALUES ($1, $2) RETURNING *";
-  const result = await pool.query(query, [description, status_complete]);
-  console.log(
-    `Added Task: ${result.rows[0].description}, ${result.rows[0].status_complete}`
-  );
-}
+  async function insertTask(description, status_complete) {
+    const query =
+      "INSERT INTO tasks (description, status_complete) VALUES ($1, $2) RETURNING *";
+    const result = await pool.query(query, [description, status_complete]);
+    console.log(
+      `Added Task: ${result.rows[0].description}, ${result.rows[0].status_complete}`
+    );
+  }
 
-insertTask("Buy groceries", true);
-insertTask("Read a book", false);
-insertTask("Change car oil", true);
-insertTask("Doctor appointment", false);
-insertTask("Pay rent", true);
+  insertTask("Buy groceries", true);
+  insertTask("Read a book", false);
+  insertTask("Change car oil", true);
+  insertTask("Doctor appointment", false);
+  insertTask("Pay rent", true);
 }
 
 // GET /tasks - Get all tasks
-app.get('/tasks', async (req, res) => {
-      try {
+app.get("/tasks", async (req, res) => {
+  try {
     const result = await pool.query("SELECT * FROM tasks");
     res.render("tasks", { tasks: result.rows });
   } catch (error) {
@@ -92,41 +85,63 @@ app.get('/tasks', async (req, res) => {
 });
 
 // POST /tasks - Add a new task
-app.post('/tasks', (request, response) => {
-    const { id, description, status } = request.body;
-    if (!id || !description || !status) {
-        return response.status(400).json({ error: 'All fields (id, description, status) are required' });
-    }
+app.post("/tasks", (request, response) => {
+  const { id, description, status } = request.body;
+  if (!id || !description || !status) {
+    return response
+      .status(400)
+      .json({ error: "All fields (id, description, status) are required" });
+  }
 
-    tasks.push({ id, description, status });
-    response.status(201).json({ message: 'Task added successfully' });
+  tasks.push({ id, description, status });
+  response.status(201).json({ message: "Task added successfully" });
 });
 
 // PUT /tasks/:id - Update a task's status
-app.put('/tasks/:id', (request, response) => {
-    const taskId = parseInt(request.params.id, 10);
-    const { status } = request.body;
-    const task = tasks.find(t => t.id === taskId);
+app.put("/tasks/:id", async (request, response) => {
+  const taskId = parseInt(request.params.id, 10);
 
-    if (!task) {
-        return response.status(404).json({ error: 'Task not found' });
-    }
-    task.status = status;
-    response.json({ message: 'Task updated successfully' });
+  const { status } = request.body;
+  try {
+    const result = await pool.query("SELECT * FROM tasks");
+    res.render("tasks", { tasks: result.rows });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).send("An error occurred");
+  }
+  const task = tasks.find((t) => t.id === taskId);
+  if (!task) {
+    return response.status(404).json({ error: "Task not found" });
+  }
+  task.status = status;
+  response.json({ message: "Task updated successfully" });
 });
 
 // DELETE /tasks/:id - Delete a task
-app.delete('/tasks/:id', (request, response) => {
-    const taskId = parseInt(request.params.id, 10);
-    const initialLength = tasks.length;
-    tasks = tasks.filter(t => t.id !== taskId);
+app.delete("/tasks/:id", (request, response) => {
+  const taskId = parseInt(request.params.id, 10);
+  const initialLength = tasks.length;
+  tasks = tasks.filter((t) => t.id !== taskId);
 
-    if (tasks.length === initialLength) {
-        return response.status(404).json({ error: 'Task not found' });
-    }
-    response.json({ message: 'Task deleted successfully' });
+  if (tasks.length === initialLength) {
+    return response.status(404).json({ error: "Task not found" });
+  }
+  response.json({ message: "Task deleted successfully" });
 });
+app.get("/tasks/:id", async (request, response) => {
+  const taskId = parseInt(request.params.id, 10);
 
+  try {
+    const result = await pool.query("SELECT * FROM tasks WHERE id = $1", [
+      taskId,
+    ]);
+    console.log(result.rows[taskId]);
+    response.render("singleTask", { task: result.rows[0] });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    response.status(500).send("An error occurred");
+  }
+});
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}/tasks`);
+  console.log(`Server is running on http://localhost:${PORT}/tasks`);
 });

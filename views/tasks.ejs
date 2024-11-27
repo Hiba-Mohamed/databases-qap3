@@ -34,8 +34,10 @@
     <td><%= task.description %></td>
     <td><%= task.status_complete ? 'Complete' : 'Incomplete' %></td>
     <td>
-      <button onclick="editTask(<%= task.id %>)">Edit</button>
-      <button  class="delete-btn" onclick="deleteTask(<%= task.id %>)">Delete</button>
+<a href="/tasks/<%= task.id %>" class="explore-btn">Explore</a>
+
+<!-- <button onclick="editTask('<%= task.id %>')">Edit</button>
+<button class="delete-btn" onclick="deleteTask('<%= task.id %>')">Delete</button> -->
     </td>
   </tr>
 <% }) %>
