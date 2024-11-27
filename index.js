@@ -1,17 +1,84 @@
 const express = require('express');
 const app = express();
 const PORT = 3000;
-
+const { Pool } = require("pg");
+require("dotenv").config();
 app.use(express.json());
 
-let tasks = [
-    { id: 1, description: 'Buy groceries', status: 'incomplete' },
-    { id: 2, description: 'Read a book', status: 'complete' },
-];
+const config = {
+  user: process.env.DB_USER,
+  host: "localhost",
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: 5432,
+};
+// PostgreSQL connection
+const pool = new Pool(config);
+
+
+// let tasks = [
+//     { id: 1, description: 'Buy groceries', status: 'incomplete' },
+//     { id: 2, description: 'Read a book', status: 'complete' },
+// ];
+
+
+async function createTable() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tasks (
+        id SERIAL PRIMARY KEY,
+        description TEXT NOT NULL,
+        status_complete BOOLEAN
+      );
+    `);
+
+    console.log(
+      "-------------------------------------------"
+    );
+    console.log(
+      "| OK    Tasks table created successfully! |"
+    );
+    console.log(
+      "-------------------------------------------"
+    );
+  } catch (error) {
+    console.log(
+      "---------------------------------------------------------------------"
+    );
+    console.log(
+      "| X    Error happened while creating table:                         |"
+    );
+    console.log(
+      "---------------------------------------------------------------------"
+    );
+    console.error(error);
+  }
+}
+(async function populateDatabase(){
+await createTable();
+await insertSampleData()
+
+})()
+async function insertSampleData() {
+async function insertTask(description, status_complete) {
+  const query =
+    "INSERT INTO tasks (description, status_complete) VALUES ($1, $2) RETURNING *";
+  const result = await pool.query(query, [description, status_complete]);
+  console.log(
+    `Added Task: ${result.rows[0].description}, ${result.rows[0].status_complete}`
+  );
+}
+
+insertTask("Buy groceries", true);
+insertTask("Read a book", false);
+insertTask("Change car oil", true);
+insertTask("Doctor appointment", false);
+insertTask("Pay rent", true);
+}
 
 // GET /tasks - Get all tasks
 app.get('/tasks', (req, res) => {
-    res.json(tasks);
+    res.render("tasks")
 });
 
 // POST /tasks - Add a new task
