@@ -1,0 +1,46 @@
+<html lang="en">
+  <head>
+    <title>Tasks</title>
+<link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <h1>TASKS</h1>
+    <main>
+          <form action="/tasks" method="POST">
+      <label for="description">Task Description:</label>
+      <input type="text" id="description" name="description" required>
+      
+      <label for="status">Status:</label>
+      <select id="status" name="status_complete">
+        <option value="true">Complete</option>
+        <option value="false">Incomplete</option>
+      </select>
+
+      <button type="submit">Add Task</button>
+    </form>
+<table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+<% tasks.forEach(task => { %>
+  <tr class="task">
+    <td><%= task.id %></td>
+    <td><%= task.description %></td>
+    <td><%= task.status_complete ? 'Complete' : 'Incomplete' %></td>
+    <td>
+      <button onclick="editTask(<%= task.id %>)">Edit</button>
+      <button  class="delete-btn" onclick="deleteTask(<%= task.id %>)">Delete</button>
+    </td>
+  </tr>
+<% }) %>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

@@ -15,6 +15,9 @@ const config = {
 // PostgreSQL connection
 const pool = new Pool(config);
 
+app.set("view engine", "ejs");
+app.set("views", "./views");
+app.use(express.static("public"));
 
 // let tasks = [
 //     { id: 1, description: 'Buy groceries', status: 'incomplete' },
@@ -54,11 +57,12 @@ async function createTable() {
     console.error(error);
   }
 }
+
 (async function populateDatabase(){
 await createTable();
 await insertSampleData()
-
 })()
+
 async function insertSampleData() {
 async function insertTask(description, status_complete) {
   const query =
@@ -77,8 +81,14 @@ insertTask("Pay rent", true);
 }
 
 // GET /tasks - Get all tasks
-app.get('/tasks', (req, res) => {
-    res.render("tasks")
+app.get('/tasks', async (req, res) => {
+      try {
+    const result = await pool.query("SELECT * FROM tasks");
+    res.render("tasks", { tasks: result.rows });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).send("An error occurred");
+  }
 });
 
 // POST /tasks - Add a new task
@@ -118,5 +128,5 @@ app.delete('/tasks/:id', (request, response) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server is running on http://localhost:${PORT}/tasks`);
 });
