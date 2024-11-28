@@ -1,3 +1,16 @@
+# Part 1: PostgreSQL Integration
+1. **Run npm start**  
+2. **interact with the app**  
+
+# Part 2: MongoDB Queries
+1. **Prepare mongoDB compass with a connection URI mongodb://localhost:27017**  
+1. **Run node mongoDB.js**  
+2. **Refresh to see the data loaded**  
+2. **Refresh to see the genre of the book “1984” updated to "Science Fiction"**  
+2. **Refresh to see the book “The Hobbit” deleted**  
+
+
+
 # Express Task Manager
 This repository serves as a **template** for the Task Manager application, used in your assignment. It provides a basic Express.js app with in-memory storage to manage tasks. Your task is to extend this application by integrating it with a PostgreSQL database.
 
