@@ -14,7 +14,7 @@ const config = {
 };
 // PostgreSQL connection
 const pool = new Pool(config);
-app.use(express.urlencoded({ extended: true })); // json payload middleware for form data 
+app.use(express.urlencoded({ extended: true })); // json payload middleware for form data
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
@@ -60,15 +60,15 @@ async function createTable() {
 async function insertTask(description, status_complete) {
   const query =
     "INSERT INTO tasks (description, status_complete) VALUES ($1, $2) RETURNING *";
-    try {
-      const result = await pool.query(query, [description, status_complete]);
-      console.log(
-        `Added Task: ${result.rows[0].description}, ${result.rows[0].status_complete}`
-      );
-    } catch (error) {
-      console.error("Error inserting task:", error);
-      throw error; // Propagate the error
-    }
+  try {
+    const result = await pool.query(query, [description, status_complete]);
+    console.log(
+      `Added Task: ${result.rows[0].description}, ${result.rows[0].status_complete}`
+    );
+  } catch (error) {
+    console.error("Error inserting task:", error);
+    throw error; // Propagate the error
+  }
 }
 
 async function insertSampleData() {
@@ -79,15 +79,14 @@ async function insertSampleData() {
   insertTask("Pay rent", true);
 }
 
-
 app.get("/messageError", async (req, res) => {
-      const message = req.query.message || "";
-    res.render("messageError", { message: message });
+  const message = req.query.message || "";
+  res.render("messageError", { message: message });
 });
 
 app.get("/messageSuccess", async (req, res) => {
-      const message = req.query.message || "";
-    res.render("messageSuccess", { message: message });
+  const message = req.query.message || "";
+  res.render("messageSuccess", { message: message });
 });
 
 // GET /tasks - Get all tasks
@@ -152,15 +151,27 @@ app.put("/tasks/:id", async (request, response) => {
 });
 
 // DELETE /tasks/:id - Delete a task
-app.delete("/tasks/:id", (request, response) => {
+app.delete("/tasks/:id", async (request, response) => {
   const taskId = parseInt(request.params.id, 10);
-  const initialLength = tasks.length;
-  tasks = tasks.filter((t) => t.id !== taskId);
-
-  if (tasks.length === initialLength) {
-    return response.status(404).json({ error: "Task not found" });
+  const query = "DELETE FROM tasks WHERE id = $1 RETURNING *";
+  try {
+    const result = await pool.query(query, [taskId]);
+    console.log("success")
+    if (result.rows.length === 0) {
+      return response.redirect(
+        "/messageError?message=Error: Error while deleting task, task not found."
+      );
+    }
+    response.json({ message: "Task deleted successfully" });
+    // return response.redirect(
+    //   "/messageSuccess?message=Success: Task deleted successfully."
+    // );
+  } catch (error) {
+    console.log(error)
+    return response.redirect(
+      "/messageError?message=Error: Error while deleting task."
+    );
   }
-  response.json({ message: "Task deleted successfully" });
 });
 
 app.get("/tasks/:id", async (request, response) => {
@@ -170,7 +181,7 @@ app.get("/tasks/:id", async (request, response) => {
     const result = await pool.query("SELECT * FROM tasks WHERE id = $1", [
       taskId,
     ]);
-    console.log(result.rows[taskId]);
+    // console.log(result.rows[taskId]);
     response.render("singleTask", { task: result.rows[0] });
   } catch (error) {
     console.error("Error fetching tasks:", error);
