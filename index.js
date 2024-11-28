@@ -54,7 +54,12 @@ async function createTable() {
 
 (async function populateDatabase() {
   await createTable();
-  await insertSampleData();
+    const result = await pool.query("SELECT * FROM tasks");
+    // console.log(result.rows)
+    const itemsArray = result.rows;
+    if (itemsArray.length === 0){
+      insertSampleData();
+    }
 })();
 
 async function insertTask(description, status_complete) {
@@ -156,7 +161,7 @@ app.delete("/tasks/:id", async (request, response) => {
   const query = "DELETE FROM tasks WHERE id = $1 RETURNING *";
   try {
     const result = await pool.query(query, [taskId]);
-    console.log("success")
+    console.log("successfully deleted task with id: ", taskId)
     if (result.rows.length === 0) {
       return response.redirect(
         "/messageError?message=Error: Error while deleting task, task not found."
