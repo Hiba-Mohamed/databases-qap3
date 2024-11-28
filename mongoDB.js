@@ -26,14 +26,35 @@ const sampleBooks = [
 ];
 
 // Insert sample data
-async function insertSampleData() {
+(async function insertSampleData() {
   try {
     await Book.insertMany(sampleBooks);
     console.log("Sample books inserted");
   } catch (error) {
     console.error("Error inserting sample data", error);
   }
-}
+})()
 
-// Call the function to insert the data
-insertSampleData();
+
+// Retrieve the titles of all books.
+(async function retrieveBooksTitle (){
+
+})()
+
+
+// Find all books written by “J.R.R. Tolkien”.
+(async function findBookByAuthor(){
+
+})()
+
+
+// Update the genre of “1984” to "Science Fiction".
+(async function updateGenreByBookName(){
+
+})()
+
+
+// Delete the book “The Hobbit”.
+(async function deleteBookByName(){
+
+})()
