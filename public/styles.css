@@ -217,3 +217,58 @@ button:active {
 .explore-btn:active {
     background-color: #c07bb8; /* Even darker green when clicked */
 }
+
+
+
+
+.errorMessage {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.errorMessage th, .errorMessage td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.errorMessage th {
+  background-color: #841919;
+  color: white;
+}
+
+.errorMessage td {
+  background-color: #f9f9f9;
+}
+
+.errorMessage tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+
+.successMessage {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.successMessage th, .successMessage td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.successMessage th {
+  background-color: #19841e;
+  color: white;
+}
+
+.successMessage td {
+  background-color: #f9f9f9;
+}
+
+.successMessage tr:hover {
+  background-color: #f1f1f1;
+}
