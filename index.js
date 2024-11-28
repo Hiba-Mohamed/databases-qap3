@@ -139,7 +139,7 @@ app.post("/tasks/:id", async (request, response) => {
   const taskId = parseInt(request.params.id, 10);
   console.log(request.body);
   const { description, status_complete } = request.body;
-  const isComplete = status_complete === "true"; // Converts "true" string to true, "false" string to false
+  const isComplete = status_complete === "true"; // Converts string to boolean
   console.log(typeof isComplete);
   console.log(isComplete);
   if (!description || typeof isComplete !== "boolean") {
@@ -170,6 +170,7 @@ app.post("/tasks/:id", async (request, response) => {
         "/messageError?message=Error: Error while updating task, task not found."
       );  }
 });
+
 
 // DELETE /tasks/:id - Delete a task
 app.delete("/tasks/:id", async (request, response) => {
