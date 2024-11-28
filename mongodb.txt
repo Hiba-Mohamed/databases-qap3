@@ -1,0 +1,48 @@
+
+const bookSchema = new mongoose.Schema({
+  title: { type: String, required: true, trim: true },
+  author: { type: String, required: true, trim: true },
+  genre: { type: String, required: true, trim: true },
+  year: { type: Number, required: true, trim: true },
+});
+
+Create a collection named books.
+const Book = mongoose.model("Book", bookSchema, "books");
+
+// Sample books data
+const sampleBooks = [
+  { title: "1984", author: "George Orwell", genre: "Dystopian", year: 1949 },
+  {
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    genre: "Fantasy",
+    year: 1937,
+  },
+  {
+    title: "The Fellowship of the Ring",
+    author: "J.R.R. Tolkien",
+    genre: "Fantasy",
+    year: 1954,
+  },
+];
+
+Insert the sample book data provided above into the books collection.
+     Book.insertMany(sampleBooks);
+
+
+// Retrieve the titles of all books.
+     Book.find({}, { title: 1, _id: 0 });
+
+
+// Find all books written by “J.R.R. Tolkien”.
+     Book.find( { author: author },{ title: 1, _id: 0 });
+
+
+// Update the genre of “1984” to "Science Fiction".
+     Book.updateOne({ title: bookName }, { $set: { genre: newGenre } });
+
+
+// Delete the book “The Hobbit”.
+     Book.deleteOne({ title: bookName });
+
+
