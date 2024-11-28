@@ -64,24 +64,38 @@ async function findBookByAuthor(author) {
       { author: author },
       { title: 1, _id: 0 }
     );
-    console.log(`Book by ${author}: `,authorBooks);
+    console.log(`Book by ${author}: `, authorBooks);
   } catch (error) {
     console.log(error);
   }
 }
-findBookByAuthor('J.R.R. Tolkien');
+findBookByAuthor("J.R.R. Tolkien");
 
-  // Update the genre of “1984” to "Science Fiction".
-  async function updateGenreByBookName(bookName, newGenre) {
-    try{
-      const updatedGenre = await Book.updateOne({title: bookName}, {$set:{genre: newGenre}})
-      console.log(updatedGenre)
-    }catch(error){
-      console.log(error)
-    }
+// Update the genre of “1984” to "Science Fiction".
+setTimeout ((async function updateGenreByBookName(bookName, newGenre) {
+  bookName = "1984";
+  newGenre = "Science Fiction";
+  try {
+    const updatedGenre = await Book.updateOne(
+      { title: bookName },
+      { $set: { genre: newGenre } }
+    );
+    console.log(updatedGenre);
+  } catch (error) {
+    console.log(error);
   }
- updateGenreByBookName("1984", "Science Fiction")
+}), 5000)
 
-//   // Delete the book “The Hobbit”.
-//   async function deleteBookByName() {}
-// deleteBookByName();
+// Delete the book “The Hobbit”.
+setTimeout(
+  (async function deleteBookByName(bookName) {
+    bookName = "The Hobbit";
+    try {
+      const deletedBook = await Book.deleteOne({ title: bookName });
+    } catch (error) {
+      console.log(error);
+    }
+  }),
+  7000
+);
+
