@@ -15,7 +15,6 @@ const config = {
 // PostgreSQL connection
 const pool = new Pool(config);
 app.use(express.urlencoded({ extended: true })); // json payload middleware for form data
-
 app.set("view engine", "ejs");
 app.set("views", "./views");
 app.use(express.static("public"));
@@ -54,12 +53,12 @@ async function createTable() {
 
 (async function populateDatabase() {
   await createTable();
-    const result = await pool.query("SELECT * FROM tasks");
-    // console.log(result.rows)
-    const itemsArray = result.rows;
-    if (itemsArray.length === 0){
-      insertSampleData();
-    }
+  const result = await pool.query("SELECT * FROM tasks");
+  // console.log(result.rows)
+  const itemsArray = result.rows;
+  if (itemsArray.length === 0) {
+    insertSampleData();
+  }
 })();
 
 async function insertTask(description, status_complete) {
@@ -136,23 +135,40 @@ app.post("/tasks", async (request, response) => {
 });
 
 // PUT /tasks/:id - Update a task's status
-app.put("/tasks/:id", async (request, response) => {
+app.post("/tasks/:id", async (request, response) => {
   const taskId = parseInt(request.params.id, 10);
+  console.log(request.body);
+  const { description, status_complete } = request.body;
+  const isComplete = status_complete === "true"; // Converts "true" string to true, "false" string to false
+  console.log(typeof isComplete);
+  console.log(isComplete);
+  if (!description || typeof isComplete !== "boolean") {
+    return response.redirect(
+      "/messageError?message=Error: Description is required, and status must be true or false."
+    );
+  }
 
-  const { status } = request.body;
   try {
-    const result = await pool.query("SELECT * FROM tasks");
-    response.render("tasks", { tasks: result.rows });
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    response.status(500).send("An error occurred");
-  }
-  const task = tasks.find((t) => t.id === taskId);
-  if (!task) {
-    return response.status(404).json({ error: "Task not found" });
-  }
-  task.status = status;
-  response.json({ message: "Task updated successfully" });
+    const updateQuery = `
+      UPDATE tasks
+      SET description = $1, status_complete = $2
+      WHERE id = $3
+      RETURNING *;
+    `;
+
+    const result = await pool.query(updateQuery, [
+      description,
+      status_complete,
+      taskId,
+    ]);
+    return response.redirect(
+      "/messageSuccess?message=Success: Task Edited successfully."
+    );  }
+     catch (error) {
+    console.log(error);
+      return response.redirect(
+        "/messageError?message=Error: Error while updating task, task not found."
+      );  }
 });
 
 // DELETE /tasks/:id - Delete a task
@@ -161,7 +177,7 @@ app.delete("/tasks/:id", async (request, response) => {
   const query = "DELETE FROM tasks WHERE id = $1 RETURNING *";
   try {
     const result = await pool.query(query, [taskId]);
-    console.log("successfully deleted task with id: ", taskId)
+    console.log("successfully deleted task with id: ", taskId);
     if (result.rows.length === 0) {
       return response.redirect(
         "/messageError?message=Error: Error while deleting task, task not found."
@@ -172,7 +188,7 @@ app.delete("/tasks/:id", async (request, response) => {
     //   "/messageSuccess?message=Success: Task deleted successfully."
     // );
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return response.redirect(
       "/messageError?message=Error: Error while deleting task."
     );

@@ -1,54 +1,72 @@
 <html lang="en">
   <head>
     <title>Tasks</title>
-<link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <h1>Task Details</h1>
-<main>
-        <table class="task-detail-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="task">
-              <td><%= task.id %></td>
-              <td><%= task.description %></td>
-              <td><%= task.status_complete ? 'Complete' : 'Incomplete' %></td>
-              <td>
-                <a href="/tasks" class="back-btn">Go back to tasks</a>
-                <button href="/tasks/<%= task.id %>/edit" class="edit-btn">Edit</button>
-                <button class="delete-btn" onclick="deleteTask('<%= task.id %>')">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-    </main>
-      <script>
-  function deleteTask(taskId) {
-      fetch(`/tasks/${taskId}`, {
-        method: 'DELETE',
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        if (data.message === "Task deleted successfully") {
-          window.location.href = "/messageSuccess?message=Success:Task deleted successfully."; 
-        } else {
-        window.location.href = "/messageError?message=Error: Error deleting task."; 
-        console.error("Error deleting task:", error);        }
-      })
-      .catch(error => {
-        window.location.href = "/messageError?message=Error: Error deleting task."; 
-        console.error("Error deleting task:", error);
-      });
-  }
-</script>
-  </body>
+    <main>
+      <table class="task-detail-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="task">
+            <td><%= task.id %></td>
+            <td><%= task.description %></td>
+            <td><%= task.status_complete ? 'Complete' : 'Incomplete' %></td>
+            <td>
+              <a href="/tasks" class="back-btn">Go back to tasks</a>
+              <!-- <button href="/tasks/<%= task.id %>/edit" class="edit-btn">Edit</button> -->
+              <button class="delete-btn" onclick="deleteTask('<%= task.id %>')">
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <form action="/tasks/<%= task.id %>" method="POST">
+        <label for="description">Task Description:</label>
+        <input type="text" id="description" name="description" required />
 
+        <label for="status">Status:</label>
+        <select id="status" name="status_complete">
+          <option value="true">Complete</option>
+          <option value="false">Incomplete</option>
+        </select>
+
+        <button type="submit">Edit Task</button>
+      </form>
+    </main>
+    <script>
+      function deleteTask(taskId) {
+        fetch(`/tasks/${taskId}`, {
+          method: "DELETE",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            if (data.message === "Task deleted successfully") {
+              window.location.href =
+                "/messageSuccess?message=Success:Task deleted successfully.";
+            } else {
+              window.location.href =
+                "/messageError?message=Error: Error deleting task.";
+              console.error("Error deleting task:", error);
+            }
+          })
+          .catch((error) => {
+            window.location.href =
+              "/messageError?message=Error: Error deleting task.";
+            console.error("Error deleting task:", error);
+          });
+      }
+
+    </script>
+  </body>
 </html>
