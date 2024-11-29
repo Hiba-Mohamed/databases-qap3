@@ -1,13 +1,14 @@
 # Part 1: PostgreSQL Integration
-1. **Run npm start**  
-2. **interact with the app**  
+1. **Set up postgress variables: (DB_USER, DB_PASSWORD, DB_DATABASE)**  
+2. **Run npm start**  
+3. **interact with the app**  
 
 # Part 2: MongoDB Queries
 1. **Prepare mongoDB compass with a connection URI mongodb://localhost:27017**  
-1. **Run node mongoDB.js**  
-2. **Refresh to see the data loaded**  
-2. **Refresh to see the genre of the book “1984” updated to "Science Fiction"**  
-2. **Refresh to see the book “The Hobbit” deleted**  
+2. **Run node mongoDB.js**  
+3. **Refresh to see the data loaded**  
+4. **Refresh to see the genre of the book “1984” updated to "Science Fiction"**  
+5. **Refresh to see the book “The Hobbit” deleted**  
 
 
 
